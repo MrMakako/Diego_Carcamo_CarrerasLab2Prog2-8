@@ -5,6 +5,7 @@
 package carreraslab2.pkg8;
 
 import java.awt.Color;
+import java.awt.List;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -15,7 +16,11 @@ import javax.swing.JColorChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.RowSorter;
+import javax.swing.RowSorter.SortKey;
+import javax.swing.SortOrder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -26,97 +31,51 @@ public class Carreras extends javax.swing.JFrame {
     /**
      * Creates new form Carreras
      */
-    
     DirManager Manager;
-    
-    
+
     String nombrePista;
-    
+
     int LargoPista;
-    
-    
+
     boolean ganador;
-    
-    
-    
+
+    ArrayList<Auto> AutosListados;
+
     public Carreras() {
-        
-        
-        ganador=false;
-        
-        
-        
-        
+
+        ganador = false;
+
+        AutosListados = new ArrayList<>();
+
         initComponents();
-        Manager= new DirManager();
-        
-        
+        Manager = new DirManager();
+
         UpdateBox();
-        
-        
-        
+
     }
-    
-    
-    
-  
-    
-    
-    
-    
-    
-    
-    
-    
-    public void CambiarPista(){
-        
-        
+
+    public void CambiarPista() {
+
         ProgresoCarrera.setMaximum(LargoPista);
-        
-    
+
         ///solo se deplegaria el nombre
-    
-    
-    
-    
     }
-    
-    
-    
-    public void UpdateTable(JTable tabla){
+
+    public void UpdateTable(JTable tabla) {
+        
+        int size= tabla.getRowCount();
         
         
+        DefaultTableModel ModeloAutos= (DefaultTableModel)tabla.getModel();
         
         
+        TableRowSorter Tr= new TableRowSorter(ModeloAutos);
+        
+        tabla.setRowSorter(Tr);
         
         
-    
-    
-    
-    }
-    
-    
-    
-    
-    public void AgregarAuto(String code){
-        
-        
-        DefaultTableModel model= (DefaultTableModel)TablaPos.getModel();
-        
-        if(Manager.Exist(Integer.parseInt(code))){
-        
-            String data[]={BoxAutos.getSelectedItem()+"",Manager.getConductor(),Manager.getTipo()+""};
-            
-            Manager.getColor();
-            
-            
-             model.addRow(data);
-        
-        
-        
-        
-        }
-        
+        ArrayList<SortKey>ordenar= new ArrayList<>();
+        ordenar.add(new SortKey(2, SortOrder.ASCENDING));
         
         
         
@@ -124,28 +83,42 @@ public class Carreras extends javax.swing.JFrame {
         
         
         
-            
         
         
         
-        
-        
-        
-        
-        
-        
-        
-    
-    
-    
+
     }
-    
-    
-    
-    
-    
-    class Auto extends Thread{
-        
+
+    public Color ColowWhielRacing(int code) {
+
+        if (Manager.Exist(code)) {
+            Manager.getConductor();
+            Manager.getTipo();
+
+            return Manager.getColor();
+
+        }
+
+        return null;
+
+    }
+
+    public void AgregarAuto(String code) {
+
+        DefaultTableModel model = (DefaultTableModel) TablaPos.getModel();
+
+        if (Manager.Exist(Integer.parseInt(code))) {
+
+            String data[] = {BoxAutos.getSelectedItem() + "", Manager.getConductor(), Manager.getTipo() + "", ""};
+
+            model.addRow(data);
+
+        }
+
+    }
+
+    class Auto extends Thread {
+
         int min;
         int max;
 
@@ -153,51 +126,88 @@ public class Carreras extends javax.swing.JFrame {
             this.min = min;
             this.max = max;
         }
-        
-        
-        
+
         @Override
-        public void run(){
-            Random rand=new Random();
-            while(!ganador){
-                
-                int avance= rand.nextInt()*max+min;
-                
+        public void run() {
+            Random rand = new Random();
+            while (!ganador) {
+
+                int avance = rand.nextInt() * max + min;
+
                 //Checar Para anadir progreso debo de checar que vayan en primera posicion 
-            
-                
-                
-            
-            
-            
-            
-            
-            
-            
             }
-        
-        
-        
+
         }
-        
-    
-    
-    
+
     }
-    
-    class BarraCarrera extends Thread{
-    
-    
-        
-    
-    
-    
-    
+
+    class BarraCarrera extends Thread {
+
+        //Agregar Distancias,Actualizar tabla, Agregar Barra
+        public void run() {
+
+            Random rand = new Random();
+
+            while (!ganador) {
+
+                for (int y = 0; y < TablaPos.getRowCount(); y++) {
+                    int Tipo = Integer.parseInt((String) TablaPos.getModel().getValueAt(y, 2));
+
+                    int Distancia = 0;
+
+                    switch (Tipo) {
+
+                        case 1: {
+
+                            Distancia = (rand.nextInt() * 190 + 30);
+
+                        }
+                        case 2: {
+
+                            Distancia = (rand.nextInt() * 200 + 20);
+
+                        }
+                        case 3: {
+
+                            Distancia = (rand.nextInt() * 180 + 40);
+
+                        }
+
+                    }
+
+                    TablaPos.getModel().setValueAt(Distancia + "", y, 3);
+
+                }
+                
+                
+                UpdateTable(TablaPos);
+                
+                
+                int code= (int) TablaPos.getModel().getValueAt(0,0);
+                
+                int NewDistance =(int) TablaPos.getModel().getValueAt(0,3);
+                
+                
+                ProgresoCarrera.setValue(NewDistance);
+                ProgresoCarrera.setBackground(ColowWhielRacing(code));
+                
+                if(ProgresoCarrera.getValue()==LargoPista){
+                    ganador=true;
+                
+                
+                }
+                
+                
+                
+                
+                
+                
+
+            }
+
+        }
+
     }
-    
-    
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -216,9 +226,9 @@ public class Carreras extends javax.swing.JFrame {
         CodeAuto = new javax.swing.JTextField();
         ConductorField = new javax.swing.JTextField();
         CrearAuto = new javax.swing.JButton();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
-        jButton3 = new javax.swing.JButton();
+        NombrePista = new javax.swing.JTextField();
+        LargoField = new javax.swing.JTextField();
+        PistaBtn = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         ColorPan = new javax.swing.JPanel();
@@ -227,20 +237,16 @@ public class Carreras extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         BoxAutos = new javax.swing.JComboBox<>();
         jButton2 = new javax.swing.JButton();
+        StartBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         TablaPos.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
+            null,
             new String [] {
-                "Identificador", "Conductor", "Distancia"+"Tipo"
+                "Identificador", "Conductor","Tipo","Distancia"
             }
         ));
         jScrollPane1.setViewportView(TablaPos);
@@ -268,11 +274,16 @@ public class Carreras extends javax.swing.JFrame {
             }
         });
         getContentPane().add(CrearAuto, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 530, 95, -1));
-        getContentPane().add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 350, 95, -1));
-        getContentPane().add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 380, 95, -1));
+        getContentPane().add(NombrePista, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 350, 95, -1));
+        getContentPane().add(LargoField, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 380, 95, -1));
 
-        jButton3.setText("Agregar Pista");
-        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 410, -1, -1));
+        PistaBtn.setText("Agregar Pista");
+        PistaBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PistaBtnActionPerformed(evt);
+            }
+        });
+        getContentPane().add(PistaBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 410, -1, -1));
 
         jButton4.setText("Elejir color");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -328,136 +339,116 @@ public class Carreras extends javax.swing.JFrame {
         });
         getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 290, 100, -1));
 
+        StartBtn.setText("Start");
+        StartBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                StartBtnActionPerformed(evt);
+            }
+        });
+        getContentPane().add(StartBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 30, -1, -1));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-   
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    
-    
-    
-    
     //Actualiza la caja de orredores
-    public void UpdateBox(){
-        
-        
+    public void UpdateBox() {
+
         try {
-            ArrayList<String>Corredores=Manager.Cargar();
-            
-            
+            ArrayList<String> Corredores = Manager.Cargar();
+
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-            
-            
-            
-            for(String items:Corredores){
-            
+
+            for (String items : Corredores) {
+
                 model.addElement(items);
-            
-            
+
             }
-            
-            
+
             BoxAutos.setModel(model);
-            
-            
-            
-            
-            
-            
+
         } catch (IOException ex) {
             Logger.getLogger(Carreras.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
-        
-        
-        
-        
-        
-    
-    
-    
-    }
-    
 
-    
-    
-    
-    
+    }
+
+
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-        
-        
-        JColorChooser colorSelect= new JColorChooser();
-        
-        JOptionPane.showMessageDialog(null,colorSelect,"Elija un color", JOptionPane.PLAIN_MESSAGE);
+
+        JColorChooser colorSelect = new JColorChooser();
+
+        JOptionPane.showMessageDialog(null, colorSelect, "Elija un color", JOptionPane.PLAIN_MESSAGE);
         ColorPan.setBackground(colorSelect.getColor());
-        
-        
-        
-        
+
+
     }//GEN-LAST:event_jButton4ActionPerformed
 
-    
-    
-    public void CrearAuto(int codigo, String nombreC,int tipo,double r, double g, double b){
+    public void CrearAuto(int codigo, String nombreC, int tipo, double r, double g, double b) {
         try {
-            if(Manager.AgregarCorredor(codigo, nombreC, tipo, r, g, b)){
-                
+            if (Manager.AgregarCorredor(codigo, nombreC, tipo, r, g, b)) {
+
                 UpdateBox();
-                
+
                 ColorPan.setBackground(Color.white);
-                
+
                 ConductorField.setText("");
-                
+
                 CodeAuto.setText("");
-                
-                
-                
-                
-                
-            }else{
-                
-                JLabel msg= new JLabel("No  se puede crear");
-                JOptionPane.showMessageDialog(null,msg);
-            
-            
+
+            } else {
+
+                JLabel msg = new JLabel("No  se puede crear");
+                JOptionPane.showMessageDialog(null, msg);
+
             }
         } catch (IOException ex) {
             Logger.getLogger(Carreras.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
-        
-    
-    
-    
-    
+
     }
     private void CrearAutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CrearAutoActionPerformed
         // TODO add your handling code here:
-        double r= ColorPan.getBackground().getRed();
-        double g=ColorPan.getBackground().getGreen();
-        double b=ColorPan.getBackground().getBlue();
-        
-        
-        CrearAuto(Integer.parseInt(CodeAuto.getText()),ConductorField.getText(),TipoBox.getSelectedIndex(),r,g,b);
-        
-        
-        
-        
-        
-        
+        double r = ColorPan.getBackground().getRed();
+        double g = ColorPan.getBackground().getGreen();
+        double b = ColorPan.getBackground().getBlue();
+
+        CrearAuto(Integer.parseInt(CodeAuto.getText()), ConductorField.getText(), TipoBox.getSelectedIndex(), r, g, b);
+
+
     }//GEN-LAST:event_CrearAutoActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        
+
         AgregarAuto(BoxAutos.getSelectedItem().toString());
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void PistaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PistaBtnActionPerformed
+        // TODO add your handling code here:
+        nombrePista = NombrePista.getText();
+
+        LargoPista = Integer.parseInt(LargoField.getText());
+        CambiarPista();
+
+
+    }//GEN-LAST:event_PistaBtnActionPerformed
+
+    private void StartBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StartBtnActionPerformed
+        // TODO add your handling code here:
+        
+        BarraCarrera race= new BarraCarrera();
+        
+        race.start();
+        
+        
+        
+    }//GEN-LAST:event_StartBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -493,7 +484,7 @@ public class Carreras extends javax.swing.JFrame {
             }
         });
     }
- 
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> BoxAutos;
@@ -501,19 +492,20 @@ public class Carreras extends javax.swing.JFrame {
     private javax.swing.JPanel ColorPan;
     private javax.swing.JTextField ConductorField;
     private javax.swing.JButton CrearAuto;
+    private javax.swing.JTextField LargoField;
+    private javax.swing.JTextField NombrePista;
+    private javax.swing.JButton PistaBtn;
     private javax.swing.JProgressBar ProgresoCarrera;
+    private javax.swing.JButton StartBtn;
     private javax.swing.JTable TablaPos;
     private javax.swing.JComboBox<String> TipoBox;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
     // End of variables declaration//GEN-END:variables
 }
