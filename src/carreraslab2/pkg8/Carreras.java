@@ -4,31 +4,152 @@
  */
 package carreraslab2.pkg8;
 
+import java.awt.Color;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JColorChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
 
 /**
  *
  * @author Diego Carcamo
  */
-public class Carreras extends javax.swing.JFrame implements Runnable{
+public class Carreras extends javax.swing.JFrame {
 
     /**
      * Creates new form Carreras
      */
+    
+    DirManager Manager;
+    
+    
+    String nombrePista;
+    
+    int LargoPista;
+    
+    
+    boolean ganador;
     
     
     
     public Carreras() {
         
         
+        ganador=false;
+        
+        
         
         
         initComponents();
-        Hilo.start();
+        Manager= new DirManager();
+        
         
         
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    public void CambiarPista(){
+        
+        
+        ProgresoCarrera.setMaximum(LargoPista);
+        
+    
+        ///solo se deplegaria el nombre
+    
+    
+    
+    
+    }
+    
+    
+    
+    public void UpdateTable(JTable tabla){
+    
+    
+    
+    }
+    
+    
+    
+    
+    public void AgregarAuto(String code){
+    
+        
+    
+    
+    
+    }
+    
+    
+    
+    
+    
+    class Auto extends Thread{
+        
+        int min;
+        int max;
+
+        public Auto(int min, int max) {
+            this.min = min;
+            this.max = max;
+        }
+        
+        
+        
+        @Override
+        public void run(){
+            Random rand=new Random();
+            while(!ganador){
+                
+                int avance= rand.nextInt()*max+min;
+                
+                //Checar Para anadir progreso debo de checar que vayan en primera posicion 
+            
+                
+                
+            
+            
+            
+            
+            
+            
+            
+            }
+        
+        
+        
+        }
+        
+    
+    
+    
+    }
+    
+    class BarraCarrera extends Thread{
+    
+    
+        
+    
+    
+    
+    
+    }
+    
+    
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -40,15 +161,29 @@ public class Carreras extends javax.swing.JFrame implements Runnable{
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        Progreso = new javax.swing.JProgressBar();
+        TablaPos = new javax.swing.JTable();
+        ProgresoCarrera = new javax.swing.JProgressBar();
         jButton1 = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        TipoBox = new javax.swing.JComboBox<>();
+        CodeAuto = new javax.swing.JTextField();
+        ConductorField = new javax.swing.JTextField();
+        CrearAuto = new javax.swing.JButton();
+        jTextField3 = new javax.swing.JTextField();
+        jTextField4 = new javax.swing.JTextField();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        ColorPan = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        BoxAutos = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        TablaPos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -59,7 +194,10 @@ public class Carreras extends javax.swing.JFrame implements Runnable{
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(TablaPos);
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 100, 510, 173));
+        getContentPane().add(ProgresoCarrera, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 30, 350, 60));
 
         jButton1.setText("Correr");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -67,50 +205,197 @@ public class Carreras extends javax.swing.JFrame implements Runnable{
                 jButton1ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 320, -1, -1));
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "MQues" }));
+        TipoBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "McQueen", "Convertible", "Nascar" }));
+        getContentPane().add(TipoBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 440, 102, -1));
+        getContentPane().add(CodeAuto, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 460, 95, -1));
+        getContentPane().add(ConductorField, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 490, 95, -1));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(160, 160, 160)
-                        .addComponent(Progreso, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(69, 69, 69)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton1)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(53, 53, 53)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(80, Short.MAX_VALUE))
+        CrearAuto.setText("Crear");
+        CrearAuto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CrearAutoActionPerformed(evt);
+            }
+        });
+        getContentPane().add(CrearAuto, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 530, 95, -1));
+        getContentPane().add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 350, 95, -1));
+        getContentPane().add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 380, 95, -1));
+
+        jButton3.setText("Agregar Pista");
+        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 410, -1, -1));
+
+        jButton4.setText("Elejir color");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 470, 100, 35));
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(59, 59, 59)
-                .addComponent(Progreso, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1)
-                .addGap(61, 61, 61)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(62, Short.MAX_VALUE))
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(32, 500, -1, 73));
+
+        javax.swing.GroupLayout ColorPanLayout = new javax.swing.GroupLayout(ColorPan);
+        ColorPan.setLayout(ColorPanLayout);
+        ColorPanLayout.setHorizontalGroup(
+            ColorPanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        ColorPanLayout.setVerticalGroup(
+            ColorPanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 39, Short.MAX_VALUE)
+        );
+
+        getContentPane().add(ColorPan, new org.netbeans.lib.awtextra.AbsoluteConstraints(32, 377, -1, -1));
+
+        jLabel1.setText("Color");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(65, 354, 37, -1));
+
+        jLabel2.setText("Numero");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 460, 61, -1));
+
+        jLabel3.setText("Nombre Conductor");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(144, 490, -1, -1));
+
+        BoxAutos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        getContentPane().add(BoxAutos, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 290, 110, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-       
-       Hilo.run();
+   
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    
+    
+    
+    
+    //Actualiza la caja de orredores
+    public void UpdateBox(){
+        
+        
+        try {
+            ArrayList<String>Corredores=Manager.Cargar();
+            
+            
+            DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+            
+            
+            
+            for(String items:Corredores){
+            
+                model.addElement(items);
+            
+            
+            }
+            
+            
+            BoxAutos.setModel(model);
+            
+            
+            
+            
+            
+            
+        } catch (IOException ex) {
+            Logger.getLogger(Carreras.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    }
+    
+    Cla
+    
+    
+    
+    
+    
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        
+        
+        JColorChooser colorSelect= new JColorChooser();
+        
+        JOptionPane.showMessageDialog(null,colorSelect,"Elija un color", JOptionPane.PLAIN_MESSAGE);
+        ColorPan.setBackground(colorSelect.getColor());
+        
+        
+        
+        
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    
+    
+    public void CrearAuto(int codigo, String nombreC,int tipo,double r, double g, double b){
+        try {
+            if(Manager.AgregarCorredor(codigo, nombreC, tipo, r, g, b)){
+                
+                UpdateBox();
+                
+                ColorPan.setBackground(Color.white);
+                
+                ConductorField.setText("");
+                
+                CodeAuto.setText("");
+                
+                
+                
+                
+                
+            }else{
+                
+                JLabel msg= new JLabel("No  se puede crear");
+                JOptionPane.showMessageDialog(null,msg);
+            
+            
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Carreras.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        
+    
+    
+    
+    
+    }
+    private void CrearAutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CrearAutoActionPerformed
+        // TODO add your handling code here:
+        double r= ColorPan.getBackground().getRed();
+        double g=ColorPan.getBackground().getGreen();
+        double b=ColorPan.getBackground().getBlue();
+        
+        
+        CrearAuto(Integer.parseInt(CodeAuto.getText()),ConductorField.getText(),TipoBox.getSelectedIndex(),r,g,b);
+        
+        
+        
+        
+        
+        
+    }//GEN-LAST:event_CrearAutoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -146,33 +431,26 @@ public class Carreras extends javax.swing.JFrame implements Runnable{
             }
         });
     }
-    Thread Hilo= new Thread(this);
-    @Override
-    public void run() {
-        
-        
-        
-        
-        for(int i=0;i<100;i++){
-            Progreso.setValue(i);
-            try {
-                Thread.sleep(100);
-                
-                
-               
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Carreras.class.getName()).log(Level.SEVERE, null, ex);
-            }
-  
-        
-        }
-    }
+ 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JProgressBar Progreso;
+    private javax.swing.JComboBox<String> BoxAutos;
+    private javax.swing.JTextField CodeAuto;
+    private javax.swing.JPanel ColorPan;
+    private javax.swing.JTextField ConductorField;
+    private javax.swing.JButton CrearAuto;
+    private javax.swing.JProgressBar ProgresoCarrera;
+    private javax.swing.JTable TablaPos;
+    private javax.swing.JComboBox<String> TipoBox;
     private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField jTextField4;
     // End of variables declaration//GEN-END:variables
 }
