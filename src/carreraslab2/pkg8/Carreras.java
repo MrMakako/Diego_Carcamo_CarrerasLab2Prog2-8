@@ -15,6 +15,7 @@ import javax.swing.JColorChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -50,8 +51,15 @@ public class Carreras extends javax.swing.JFrame {
         Manager= new DirManager();
         
         
+        UpdateBox();
+        
+        
         
     }
+    
+    
+    
+  
     
     
     
@@ -76,6 +84,12 @@ public class Carreras extends javax.swing.JFrame {
     
     
     public void UpdateTable(JTable tabla){
+        
+        
+        
+        
+        
+        
     
     
     
@@ -85,7 +99,41 @@ public class Carreras extends javax.swing.JFrame {
     
     
     public void AgregarAuto(String code){
-    
+        
+        
+        DefaultTableModel model= (DefaultTableModel)TablaPos.getModel();
+        
+        if(Manager.Exist(Integer.parseInt(code))){
+        
+            String data[]={BoxAutos.getSelectedItem()+"",Manager.getConductor(),Manager.getTipo()+""};
+            
+            Manager.getColor();
+            
+            
+             model.addRow(data);
+        
+        
+        
+        
+        }
+        
+        
+        
+        
+       
+        
+        
+        
+            
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
     
     
@@ -178,6 +226,7 @@ public class Carreras extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         BoxAutos = new javax.swing.JComboBox<>();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -191,7 +240,7 @@ public class Carreras extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Identificador", "Conductor", "Distancia"+"Tipo"
             }
         ));
         jScrollPane1.setViewportView(TablaPos);
@@ -271,6 +320,14 @@ public class Carreras extends javax.swing.JFrame {
         BoxAutos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         getContentPane().add(BoxAutos, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 290, 110, -1));
 
+        jButton2.setText("Agregar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 290, 100, -1));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -325,8 +382,7 @@ public class Carreras extends javax.swing.JFrame {
     
     }
     
-    Cla
-    
+
     
     
     
@@ -397,6 +453,12 @@ public class Carreras extends javax.swing.JFrame {
         
     }//GEN-LAST:event_CrearAutoActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        
+        AgregarAuto(BoxAutos.getSelectedItem().toString());
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -443,6 +505,7 @@ public class Carreras extends javax.swing.JFrame {
     private javax.swing.JTable TablaPos;
     private javax.swing.JComboBox<String> TipoBox;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;

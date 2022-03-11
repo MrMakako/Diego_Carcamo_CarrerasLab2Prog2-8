@@ -31,6 +31,9 @@ public class DirManager {
         Carpeta.mkdirs();
 
         Crear();
+        
+        
+       
 
     }
 
@@ -80,7 +83,7 @@ public class DirManager {
     
     
     }
-    public int tipo(){
+    public int getTipo(){
         
         
         try {
@@ -112,7 +115,8 @@ public class DirManager {
 
                 Corredores.readUTF();
                 Corredores.readInt();
-                //Colores se me olvido que eran lfoa
+                //Colores se me olvido que eran float pense que eran doubles y no lo cambie
+                //Sorry
                 Corredores.readDouble();
                 Corredores.readDouble();
                 Corredores.readDouble();
