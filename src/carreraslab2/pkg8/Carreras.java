@@ -205,7 +205,7 @@ public class Carreras extends javax.swing.JFrame {
                     TablaPos.getModel().setValueAt(DActual + Distancia + "", y, 3);
 
                     if (DistanciaTotal > primerLugar) {
-                        codeGanador = "El"+ Auto +" fue le numero:" + code + " Buenisima toreto!!!";
+                        codeGanador = "El "+ Auto +" fue le numero:" + code + " Buenisima toreto!!!";
 
                         primerLugar = DistanciaTotal;
 
@@ -232,6 +232,7 @@ public class Carreras extends javax.swing.JFrame {
 
                         JLabel msg = new JLabel(codeGanador);
                         JOptionPane.showMessageDialog(null, msg);
+                        reset();
 
                     }
              
@@ -306,10 +307,10 @@ public class Carreras extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(TablaPos);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 100, 510, 173));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 100, 520, 173));
 
         ProgresoCarrera.setBackground(new java.awt.Color(51, 255, 204));
-        getContentPane().add(ProgresoCarrera, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 30, 350, 60));
+        getContentPane().add(ProgresoCarrera, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 30, 350, 60));
 
         jButton1.setText("Correr");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -402,7 +403,7 @@ public class Carreras extends javax.swing.JFrame {
                 StartBtnActionPerformed(evt);
             }
         });
-        getContentPane().add(StartBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 30, 70, -1));
+        getContentPane().add(StartBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 40, 70, -1));
 
         jLabel4.setText("Nombre");
         getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 350, -1, -1));
@@ -434,7 +435,7 @@ public class Carreras extends javax.swing.JFrame {
                 jButton3ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 60, 70, -1));
+        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 70, 70, -1));
 
         jLabel7.setText("Tristemente no pude Cmabiar el color de la barra :(");
         getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 10, -1, -1));
@@ -445,10 +446,10 @@ public class Carreras extends javax.swing.JFrame {
                 jButton5ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 280, -1, -1));
+        getContentPane().add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 10, 70, -1));
 
         jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagen/torer.png"))); // NOI18N
-        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 30, 30, 40));
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 30, 30, 40));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -534,8 +535,20 @@ public class Carreras extends javax.swing.JFrame {
         double r = ColorPan.getBackground().getRed();
         double g = ColorPan.getBackground().getGreen();
         double b = ColorPan.getBackground().getBlue();
+        try{
+            
+                    CrearAuto(Integer.parseInt(CodeAuto.getText()), ConductorField.getText(), TipoBox.getSelectedIndex(), r, g, b);
 
-        CrearAuto(Integer.parseInt(CodeAuto.getText()), ConductorField.getText(), TipoBox.getSelectedIndex(), r, g, b);
+        
+        
+        }catch(Exception e){
+            
+            
+            JOptionPane.showMessageDialog(null, "Asegurese de llenar los campos correctamente");
+        
+        
+        
+        }
 
 
     }//GEN-LAST:event_CrearAutoActionPerformed
