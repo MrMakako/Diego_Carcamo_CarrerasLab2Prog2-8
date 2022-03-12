@@ -153,8 +153,8 @@ public class Carreras extends javax.swing.JFrame {
             int DistanciaTotal;
             String codeGanador = "";
             ProgresoCarrera.setStringPainted(true);
-             String AutoGanador;
-             String Auto;
+        
+             String Auto="";
 
 
             while (!ganador) {
@@ -205,7 +205,7 @@ public class Carreras extends javax.swing.JFrame {
                     TablaPos.getModel().setValueAt(DActual + Distancia + "", y, 3);
 
                     if (DistanciaTotal > primerLugar) {
-                        codeGanador = "El +" " ++ fue le numero:" + code + " Buenisima toreto!!!";
+                        codeGanador = "El"+ Auto +" fue le numero:" + code + " Buenisima toreto!!!";
 
                         primerLugar = DistanciaTotal;
 
