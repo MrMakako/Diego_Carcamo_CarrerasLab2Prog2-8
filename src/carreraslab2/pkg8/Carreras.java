@@ -34,15 +34,14 @@ public class Carreras extends javax.swing.JFrame {
      * Creates new form Carreras
      */
     DirManager Manager;
-    
-    
-     BarraCarrera race;
-     
-     
-     boolean isStarted;
-     
-     boolean paused;
-   
+
+    BarraCarrera race;
+
+    boolean isStarted;
+
+    int primerLugar;
+
+    boolean paused;
 
     String nombrePista;
 
@@ -53,9 +52,9 @@ public class Carreras extends javax.swing.JFrame {
     ArrayList<Auto> AutosListados;
 
     public Carreras() {
-        isStarted=false;
+        isStarted = false;
         ganador = false;
-        paused=false;
+        paused = false;
 
         AutosListados = new ArrayList<>();
 
@@ -63,8 +62,7 @@ public class Carreras extends javax.swing.JFrame {
         Manager = new DirManager();
 
         UpdateBox();
-        race= new BarraCarrera();
-       
+        race = new BarraCarrera();
 
     }
 
@@ -76,36 +74,19 @@ public class Carreras extends javax.swing.JFrame {
     }
 
     public void UpdateTable(JTable tabla) {
-        
-        int size= tabla.getRowCount();
-        
-        
-        DefaultTableModel ModeloAutos= (DefaultTableModel)tabla.getModel();
-        
-        
-        TableRowSorter Tr= new TableRowSorter(ModeloAutos);
-        
+
+        int size = tabla.getRowCount();
+
+        DefaultTableModel ModeloAutos = (DefaultTableModel) tabla.getModel();
+
+        TableRowSorter Tr = new TableRowSorter(ModeloAutos);
+
         tabla.setRowSorter(Tr);
-        
-        
-        ArrayList<SortKey>ordenar= new ArrayList<>();
+
+        ArrayList<SortKey> ordenar = new ArrayList<>();
         ordenar.add(new SortKey(3, SortOrder.DESCENDING));
-        
-        
-        
-       Tr.toggleSortOrder(3);
-        
-        
-        
-        
-        
-       
-        
-        
-        
-        
-        
-        
+
+        Tr.toggleSortOrder(3);
 
     }
 
@@ -129,7 +110,7 @@ public class Carreras extends javax.swing.JFrame {
 
         if (Manager.Exist(Integer.parseInt(code))) {
 
-            String data[] = {BoxAutos.getSelectedItem() + "", Manager.getConductor(), Manager.getTipo() + "", 0+""};
+            String data[] = {BoxAutos.getSelectedItem() + "", Manager.getConductor(), Manager.getTipo() + "", 0 + ""};
 
             model.addRow(data);
 
@@ -168,6 +149,9 @@ public class Carreras extends javax.swing.JFrame {
 
             Random rand = new Random();
 
+            primerLugar = 0;
+            int DistanciaTotal;
+            String codeGanador = "";
             while (!ganador) {
 
                 for (int y = 0; y < TablaPos.getRowCount(); y++) {
@@ -179,83 +163,81 @@ public class Carreras extends javax.swing.JFrame {
 
                         case 1: {
 
-                            Distancia = 30+rand.nextInt(190);
+                            Distancia = 30 + rand.nextInt(190);
 
                         }
                         case 2: {
 
-                            Distancia = 20+rand.nextInt(200);
+                            Distancia = 20 + rand.nextInt(200);
 
                         }
                         case 3: {
 
-                            Distancia = 40+rand.nextInt(180);
+                            Distancia = 40 + rand.nextInt(180);
 
                         }
 
                     }
-                    
-                    
-                    int DActual= Integer.parseInt(TablaPos.getModel().getValueAt(y, 3).toString());
-                    
-                     int code= Integer.parseInt(TablaPos.getValueAt(y,0).toString());
-                     
-                     
-                     System.out.println(code);
-                     
-                    ColorActual.setBackground(ColowWhielRacing(code));
-                     
-                    ProgresoCarrera.setValue(DActual+Distancia);
 
-                    TablaPos.getModel().setValueAt(DActual+Distancia + "", y, 3);
+                    int DActual = Integer.parseInt(TablaPos.getModel().getValueAt(y, 3).toString());
+
+                    int code = Integer.parseInt(TablaPos.getValueAt(y, 0).toString());
+
+                    DistanciaTotal = DActual + Distancia;
                     
+
+                    System.out.println(code);
+
+                    ColorActual.setBackground(ColowWhielRacing(code));
+
+                    ProgresoCarrera.setValue(DActual + Distancia);
+
+                    TablaPos.getModel().setValueAt(DActual + Distancia + "", y, 3);
+
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Carreras.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                    if (DistanciaTotal > primerLugar) {
+                        codeGanador = "El ganador fue le numero:" + code + " Buenisima toreto!!!";
+                        primerLugar = DistanciaTotal;
+
+                    }
+
+                    if (primerLugar >= LargoPista) {
+                        ganador = true;
+                        break;
+
+                    }
+                    
+                    
+                   
 
                 }
-                
-                
+
+                int NewDistance = Integer.parseInt(TablaPos.getModel().getValueAt(0, 3).toString());
+
+                ProgresoCarrera.setValue(NewDistance);
+
+                ProgresoCarrera.setForeground(Color.RED);
+
                 UpdateTable(TablaPos);
                 TablaPos.getRowSorter().toggleSortOrder(3);
-                
-                
-                
-               
-                
-                
-  
-                
-                int NewDistance =Integer.parseInt(TablaPos.getModel().getValueAt(0,3).toString());
-                
-                
-                ProgresoCarrera.setValue(NewDistance);
-                
-                
-          
-        
-                ProgresoCarrera.setForeground(Color.RED);
-                
-                
 
-                
-                
-                
-                
-             
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Carreras.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
+                if (ganador) {
+
+                    JLabel msg = new JLabel(codeGanador);
+                    JOptionPane.showMessageDialog(null, msg);
+
+                }
                 ProgresoCarrera.setStringPainted(true);
-                
-                
-                
-                
-                
-                
-                
-                
-                
 
             }
 
@@ -299,6 +281,9 @@ public class Carreras extends javax.swing.JFrame {
         ColorActual = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
+        jButton5 = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -323,7 +308,7 @@ public class Carreras extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 320, -1, -1));
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 320, -1, -1));
 
         TipoBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "McQueen", "Convertible", "Nascar" }));
         getContentPane().add(TipoBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 440, 102, -1));
@@ -337,8 +322,8 @@ public class Carreras extends javax.swing.JFrame {
             }
         });
         getContentPane().add(CrearAuto, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 530, 95, -1));
-        getContentPane().add(NombrePista, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 350, 95, -1));
-        getContentPane().add(LargoField, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 380, 95, -1));
+        getContentPane().add(NombrePista, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 350, 95, -1));
+        getContentPane().add(LargoField, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 380, 95, -1));
 
         PistaBtn.setText("Agregar Pista");
         PistaBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -346,7 +331,7 @@ public class Carreras extends javax.swing.JFrame {
                 PistaBtnActionPerformed(evt);
             }
         });
-        getContentPane().add(PistaBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 410, -1, -1));
+        getContentPane().add(PistaBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 410, -1, -1));
 
         jButton4.setText("Elejir color");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -386,7 +371,7 @@ public class Carreras extends javax.swing.JFrame {
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(65, 354, 37, -1));
 
         jLabel2.setText("Numero");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 460, 61, -1));
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(151, 460, 90, -1));
 
         jLabel3.setText("Nombre Conductor");
         getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(144, 490, -1, -1));
@@ -408,18 +393,14 @@ public class Carreras extends javax.swing.JFrame {
                 StartBtnActionPerformed(evt);
             }
         });
-        getContentPane().add(StartBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 30, -1, -1));
+        getContentPane().add(StartBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 30, 70, -1));
 
         jLabel4.setText("Nombre");
         getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 350, -1, -1));
 
         jLabel5.setText("Largo");
         getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 390, -1, -1));
-
-        LabelLargo.setText("Largo");
         getContentPane().add(LabelLargo, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 110, -1, -1));
-
-        NombrePistaLabel.setText("Nombre");
         getContentPane().add(NombrePistaLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 140, -1, -1));
 
         javax.swing.GroupLayout ColorActualLayout = new javax.swing.GroupLayout(ColorActual);
@@ -444,7 +425,21 @@ public class Carreras extends javax.swing.JFrame {
                 jButton3ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 60, -1, -1));
+        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 60, 70, -1));
+
+        jLabel7.setText("Tristemente no pude Cmabiar el color de la barra :(");
+        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 10, -1, -1));
+
+        jButton5.setText("Reset");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 280, -1, -1));
+
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagen/torer.png"))); // NOI18N
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 30, 30, 40));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -473,6 +468,13 @@ public class Carreras extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(Carreras.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+    }
+
+    public void reset() {
+
+        TablaPos.removeAll();
+        ProgresoCarrera.setValue(0);
 
     }
 
@@ -530,50 +532,79 @@ public class Carreras extends javax.swing.JFrame {
 
     private void PistaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PistaBtnActionPerformed
         // TODO add your handling code here:
-        nombrePista = NombrePista.getText();
 
-        LargoPista = Integer.parseInt(LargoField.getText());
-        
-        
-        LabelLargo.setText(LargoField.getText());
-        
-        NombrePistaLabel.setText(nombrePista);
-        CambiarPista();
+        try {
+
+            nombrePista = NombrePista.getText();
+
+            LargoPista = Integer.parseInt(LargoField.getText());
+
+            LabelLargo.setText(LargoField.getText());
+
+            NombrePistaLabel.setText(nombrePista);
+            CambiarPista();
+
+        } catch (Exception e) {
+            
+            
+            JOptionPane.showMessageDialog(null, "Necesita llenar los campos de la pista");
+
+        }
 
 
     }//GEN-LAST:event_PistaBtnActionPerformed
 
     private void StartBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StartBtnActionPerformed
         // TODO add your handling code here:
-   
-       
-        
-       
-        if(isStarted && paused){
-        
-            race.resume();
-        
-        }else{
-             race.start();
-             isStarted=true;
-             paused=false;
-        
+
+        if (!LabelLargo.getText().equals("") && !NombrePistaLabel.equals("")) {
+
+            if (isStarted && paused) {
+
+                race.resume();
+
+            } else {
+
+                if (TablaPos.getRowCount() == 0) {
+                    JLabel msg = new JLabel("No hay competidoras");
+                    JOptionPane.showConfirmDialog(null, msg);
+
+                } else {
+                    race = new BarraCarrera();
+                    race.start();
+                    ganador = false;
+                    isStarted = true;
+                    paused = false;
+
+                }
+
+            }
+
+        } else {
+
+            JLabel msg = new JLabel("Falta una pista");
+            JOptionPane.showConfirmDialog(null, msg);
+
         }
-        
-        
-        
-        
+
+
     }//GEN-LAST:event_StartBtnActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-        
-        paused=true;
-        
+
+        paused = true;
+
         race.suspend();
-       
-      
+
+
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+
+        reset();
+    }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -631,12 +662,15 @@ public class Carreras extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
