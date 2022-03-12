@@ -494,6 +494,30 @@ public class Carreras extends javax.swing.JFrame {
         ProgresoCarrera.setValue(0);
 
     }
+    
+    
+    public boolean  Find(String code){
+        
+        for(int i=0;i<TablaPos.getModel().getRowCount();i++){
+            if(TablaPos.getValueAt(i,0).toString().equals(code)){
+            
+                return true;
+            
+            }
+            
+        
+        
+        }
+        return false;
+        
+    
+    
+    
+    }
+    
+    
+    
+    
 
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -555,8 +579,16 @@ public class Carreras extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-
-        AgregarAuto(BoxAutos.getSelectedItem().toString());
+        if(!Find(BoxAutos.getSelectedItem().toString())){
+            AgregarAuto(BoxAutos.getSelectedItem().toString());
+        
+        
+        
+        }else{
+            JOptionPane.showMessageDialog(null, "Este corredor ya esta en la lista");
+        
+        }
+        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void PistaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PistaBtnActionPerformed
