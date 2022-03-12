@@ -152,28 +152,39 @@ public class Carreras extends javax.swing.JFrame {
             primerLugar = 0;
             int DistanciaTotal;
             String codeGanador = "";
+            ProgresoCarrera.setStringPainted(true);
+             String AutoGanador;
+             String Auto;
+
+
             while (!ganador) {
 
                 for (int y = 0; y < TablaPos.getRowCount(); y++) {
                     int Tipo = Integer.parseInt((String) TablaPos.getModel().getValueAt(y, 2));
 
                     int Distancia = 0;
-
+                    
+                   
                     switch (Tipo) {
 
-                        case 1: {
+                        case 0: {
 
                             Distancia = 30 + rand.nextInt(190);
+                            Auto="MacQueen";
+                            
+
+                        }
+                        case 1: {
+
+                            Distancia = 20 + rand.nextInt(200);
+                            Auto="Convertible";
 
                         }
                         case 2: {
 
-                            Distancia = 20 + rand.nextInt(200);
-
-                        }
-                        case 3: {
-
                             Distancia = 40 + rand.nextInt(180);
+                            
+                            Auto= "Nascar";
 
                         }
 
@@ -184,7 +195,6 @@ public class Carreras extends javax.swing.JFrame {
                     int code = Integer.parseInt(TablaPos.getValueAt(y, 0).toString());
 
                     DistanciaTotal = DActual + Distancia;
-                    
 
                     System.out.println(code);
 
@@ -194,14 +204,9 @@ public class Carreras extends javax.swing.JFrame {
 
                     TablaPos.getModel().setValueAt(DActual + Distancia + "", y, 3);
 
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(Carreras.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    
                     if (DistanciaTotal > primerLugar) {
-                        codeGanador = "El ganador fue le numero:" + code + " Buenisima toreto!!!";
+                        codeGanador = "El +" " ++ fue le numero:" + code + " Buenisima toreto!!!";
+
                         primerLugar = DistanciaTotal;
 
                     }
@@ -211,37 +216,41 @@ public class Carreras extends javax.swing.JFrame {
                         break;
 
                     }
-                    
-                    
-                   
+
+                    Advance();
+
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Carreras.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                  
 
                 }
+                
+                  if (ganador) {
 
-                int NewDistance = Integer.parseInt(TablaPos.getModel().getValueAt(0, 3).toString());
+                        JLabel msg = new JLabel(codeGanador);
+                        JOptionPane.showMessageDialog(null, msg);
 
-                ProgresoCarrera.setValue(NewDistance);
-
-                ProgresoCarrera.setForeground(Color.RED);
-
-                UpdateTable(TablaPos);
-                TablaPos.getRowSorter().toggleSortOrder(3);
-
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(Carreras.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                if (ganador) {
-
-                    JLabel msg = new JLabel(codeGanador);
-                    JOptionPane.showMessageDialog(null, msg);
-
-                }
-                ProgresoCarrera.setStringPainted(true);
-
+                    }
+             
             }
 
         }
+
+    }
+
+    public void Advance() {
+
+        int NewDistance = Integer.parseInt(TablaPos.getModel().getValueAt(0, 3).toString());
+
+        ProgresoCarrera.setValue(NewDistance);
+
+        ProgresoCarrera.setForeground(Color.RED);
+
+        UpdateTable(TablaPos);
+        TablaPos.getRowSorter().toggleSortOrder(3);
 
     }
 
@@ -473,7 +482,14 @@ public class Carreras extends javax.swing.JFrame {
 
     public void reset() {
 
-        TablaPos.removeAll();
+        DefaultTableModel model= (DefaultTableModel) TablaPos.getModel();
+
+        
+        model.setRowCount(0);
+            
+        
+        
+        
         ProgresoCarrera.setValue(0);
 
     }
@@ -545,8 +561,7 @@ public class Carreras extends javax.swing.JFrame {
             CambiarPista();
 
         } catch (Exception e) {
-            
-            
+
             JOptionPane.showMessageDialog(null, "Necesita llenar los campos de la pista");
 
         }
